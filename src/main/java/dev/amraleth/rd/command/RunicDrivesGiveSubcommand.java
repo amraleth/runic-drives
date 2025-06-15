@@ -27,7 +27,8 @@ public class RunicDrivesGiveSubcommand {
                             if (item.equals("runestone")) {
                                 if (ctx.getSource().getSender() instanceof Player player) {
                                     player.getInventory().addItem(
-                                            Runestone.createEmpty(1024).getRunestoneItemStack()
+                                            //TODO add subcommand to create some with arbitrary sizes or make them selectable
+                                            Runestone.createEmpty(2000).getRunestoneItemStack()
                                     );
                                 }
                             }

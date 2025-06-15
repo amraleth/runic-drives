@@ -21,8 +21,7 @@ public class RunicDrivesDataSubcommand {
                             if (ctx.getSource().getExecutor() instanceof Player player) {
                                 ItemStack itemStack = player.getInventory().getItemInMainHand();
                                 if (itemStack.getType() != Material.AIR) {
-                                    PersistentDataContainer dataContainer = itemStack.getItemMeta().getPersistentDataContainer();
-                                    if (dataContainer.has(Runestone.RUNESTONE_UUID)) {
+                                    if (Runestone.isRunestone(itemStack)) {
                                         Runestone runestone = Runestone.fromItemStack(itemStack);
 
                                         player.sendMessage("Size: " + runestone.getSize());
@@ -44,8 +43,7 @@ public class RunicDrivesDataSubcommand {
                                     if (ctx.getSource().getExecutor() instanceof Player player) {
                                         ItemStack itemStack = player.getInventory().getItemInMainHand();
                                         if (itemStack.getType() != Material.AIR) {
-                                            PersistentDataContainer dataContainer = itemStack.getItemMeta().getPersistentDataContainer();
-                                            if (dataContainer.has(Runestone.RUNESTONE_UUID)) {
+                                            if (Runestone.isRunestone(itemStack)) {
                                                 Runestone runestone = Runestone.fromItemStack(itemStack);
 
                                                 int count = ctx.getArgument("count", Integer.class);

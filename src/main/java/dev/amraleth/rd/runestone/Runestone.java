@@ -6,7 +6,6 @@ import dev.amraleth.rd.RunicDrives;
 import dev.amraleth.rd.string.Formatting;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -266,6 +265,13 @@ public class Runestone {
         return itemStack;
     }
 
+    /**
+     * Gets the status the runestone is in: empty, full ro partially full
+     *
+     * @param size  The maximum size of the runestone
+     * @param count The count of items currently in the runestone
+     * @return The status as a string
+     */
     private static @NotNull String getStatus(int size, int count) {
         if (count <= 0) {
             return "<green>Runestone is empty</green>";
@@ -301,6 +307,17 @@ public class Runestone {
             }
         }
         return res;
+    }
+
+    /**
+     * Checks is a given {@link ItemStack} is a runestone
+     *
+     * @param itemStack The {@link ItemStack} to check
+     * @return Whether the item is a runestone or not
+     */
+    public static boolean isRunestone(@NotNull ItemStack itemStack) {
+        PersistentDataContainer dataContainer = itemStack.getItemMeta().getPersistentDataContainer();
+        return dataContainer.has(RUNESTONE_UUID);
     }
 
     private static class ItemStackSerializer implements JsonSerializer<ItemStack>, JsonDeserializer<ItemStack> {
