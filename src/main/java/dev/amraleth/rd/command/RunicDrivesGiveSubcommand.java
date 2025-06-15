@@ -3,7 +3,7 @@ package dev.amraleth.rd.command;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import dev.amraleth.rd.runestone.Runestone;
+import dev.amraleth.rd.component.Runestone;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import org.bukkit.entity.Player;
@@ -18,18 +18,21 @@ public class RunicDrivesGiveSubcommand {
                 .then(Commands.argument("item", StringArgumentType.word())
                         .suggests((context, builder) -> {
                             builder.suggest("runestone");
+                            builder.suggest("drive");
 
                             return builder.buildFuture();
                         })
                         .executes(ctx -> {
                             String item = ctx.getArgument("item", String.class);
 
-                            if (item.equals("runestone")) {
-                                if (ctx.getSource().getSender() instanceof Player player) {
-                                    player.getInventory().addItem(
-                                            //TODO add subcommand to create some with arbitrary sizes or make them selectable
-                                            Runestone.createEmpty(2000).getRunestoneItemStack()
-                                    );
+                            if (ctx.getSource().getSender() instanceof Player player) {
+                                switch (item) {
+                                    case "runestone":
+                                        player.getInventory().addItem(
+                                                //TODO add subcommand to create some with arbitrary sizes or make them selectable
+                                                Runestone.createEmpty(2000).getRunestoneItemStack()
+                                        );
+                                        break;
                                 }
                             }
                             return Command.SINGLE_SUCCESS;

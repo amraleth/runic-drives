@@ -1,9 +1,8 @@
-package dev.amraleth.rd.runestone;
+package dev.amraleth.rd.component;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.*;
 import dev.amraleth.rd.RunicDrives;
-import dev.amraleth.rd.string.Formatting;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
@@ -12,7 +11,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Type;
@@ -27,9 +25,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 @Getter
 public class Runestone {
-    private static final Gson gson = new GsonBuilder()
-            .registerTypeAdapter(ItemStack.class, new ItemStackSerializer())
-            .create();
+    private static final Gson gson = RunicDrives.GSON;
     private static final Type MAP_TYPE = new TypeToken<Map<String, Integer>>() {
     }.getType();
 
@@ -112,7 +108,7 @@ public class Runestone {
     }
 
     /**
-     * Creates a runestone from a given {@link ItemStack}, please check if the item is really a runestone beforehand
+     * Creates a runestone from a given {@link ItemStack}, check if the item is really a runestone beforehand
      *
      * @param itemStack The ItemStack
      * @return A new runestone
@@ -318,21 +314,6 @@ public class Runestone {
     public static boolean isRunestone(@NotNull ItemStack itemStack) {
         PersistentDataContainer dataContainer = itemStack.getItemMeta().getPersistentDataContainer();
         return dataContainer.has(RUNESTONE_UUID);
-    }
-
-    private static class ItemStackSerializer implements JsonSerializer<ItemStack>, JsonDeserializer<ItemStack> {
-
-        @Contract("_, _, _ -> new")
-        @Override
-        public @NotNull JsonElement serialize(@NotNull ItemStack itemStack, Type type, JsonSerializationContext jsonSerializationContext) {
-            return new JsonPrimitive(Base64.getEncoder().encodeToString(itemStack.serializeAsBytes()));
-        }
-
-        @Override
-        public @NotNull ItemStack deserialize(@NotNull JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-            return ItemStack.deserializeBytes(Base64.getDecoder().decode(jsonElement.getAsString()));
-        }
-
     }
 
 }

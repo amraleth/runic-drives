@@ -1,4 +1,4 @@
-package dev.amraleth.rd.string;
+package dev.amraleth.rd.component;
 
 import org.jetbrains.annotations.NotNull;
 
