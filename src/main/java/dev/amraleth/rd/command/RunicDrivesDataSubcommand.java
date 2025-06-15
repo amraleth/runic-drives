@@ -3,7 +3,6 @@ package dev.amraleth.rd.command;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import dev.amraleth.rd.exception.RunestoneInsertionException;
 import dev.amraleth.rd.runestone.Runestone;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
@@ -12,7 +11,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
 
 public class RunicDrivesDataSubcommand {
 
@@ -51,17 +49,14 @@ public class RunicDrivesDataSubcommand {
                                                 Runestone runestone = Runestone.fromItemStack(itemStack);
 
                                                 int count = ctx.getArgument("count", Integer.class);
-                                                try {
-                                                    if (count == 1) {
-                                                        runestone.addItem(new ItemStack(Material.DIAMOND_SWORD));
-                                                    } else {
-                                                        int res = runestone.addMultipleItems(new ItemStack(Material.DIAMOND_SWORD), count);
-                                                        if (res != 0) {
-                                                            player.sendMessage("Could not inser " + res + " items because the Runestone is full!");
-                                                        }
-                                                    }
-                                                } catch (RunestoneInsertionException e) {
-                                                    e.printStackTrace();
+                                                int res;
+                                                if (count == 1) {
+                                                    res = runestone.addItem(new ItemStack(Material.DIAMOND_SWORD));
+                                                } else {
+                                                    res = runestone.addMultipleItems(new ItemStack(Material.DIAMOND_SWORD), count);
+                                                }
+                                                if (res != 0) {
+                                                    player.sendMessage("Could not insert " + res + " items because the Runestone is full!");
                                                 }
                                             }
                                         }

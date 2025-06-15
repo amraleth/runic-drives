@@ -3,7 +3,6 @@ package dev.amraleth.rd.runestone;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.*;
 import dev.amraleth.rd.RunicDrives;
-import dev.amraleth.rd.exception.RunestoneInsertionException;
 import dev.amraleth.rd.string.Formatting;
 import lombok.Getter;
 import org.bukkit.Material;
@@ -14,7 +13,6 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Type;
 import java.util.*;
@@ -138,16 +136,18 @@ public class Runestone {
      * Adds an item to the runestone
      *
      * @param itemStack The ItemStack to add
-     * @throws RunestoneInsertionException If the runestone is either full or there are no more types available
+     * @return 0 if the item was successfully inserted, otherwise 1
      */
-    public void addItem(@NotNull ItemStack itemStack) throws RunestoneInsertionException {
-        if (this.usedItems + 1 > this.size) {
-            throw new RunestoneInsertionException("Cannot insert item because there is no space free on runestone.");
+    public int addItem(@NotNull ItemStack itemStack) {
+        int availableSpace = this.size - this.usedItems;
+
+        if (availableSpace < 1) {
+            return 1;
         }
 
         if (!this.runestoneItems.containsKey(itemStack)) {
             if (this.usedTypes + 1 > MAX_TYPES) {
-                throw new RunestoneInsertionException("Cannot insert item because there are no types free on runestone.");
+                return 1;
             }
             this.runestoneItems.put(itemStack, 1);
             this.usedTypes += 1;
@@ -157,6 +157,7 @@ public class Runestone {
         this.usedItems += 1;
 
         updateItemStack();
+        return 0;
     }
 
     /**
@@ -165,9 +166,9 @@ public class Runestone {
      * @param itemStack The {@link ItemStack} to add
      * @param count     The amount of items to add
      * @return The remaining items that could not be inserted if available, otherwise 0
-     * @throws RunestoneInsertionException If the runestone has no free types
      */
-    public int addMultipleItems(@NotNull ItemStack itemStack, int count) throws RunestoneInsertionException {
+    public int addMultipleItems(@NotNull ItemStack itemStack, int count) {
+        int originalCount = count;
         int availableSpace = this.size - this.usedItems;
         int res = 0;
 
@@ -178,7 +179,7 @@ public class Runestone {
 
         if (!this.runestoneItems.containsKey(itemStack)) {
             if (this.usedTypes + 1 > MAX_TYPES) {
-                throw new RunestoneInsertionException("Cannot insert item because there are no types free on runestone.");
+                return originalCount;
             }
             this.runestoneItems.put(itemStack, count);
             this.usedTypes += 1;
