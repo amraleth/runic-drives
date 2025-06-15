@@ -1,0 +1,6 @@
+name: RunicDrives
+main: dev.amraleth.rd.RunicDrives
+version: 1.0-alpha
+api-version: 1.21.5
+bootstrapper: dev.amraleth.rd.bootstrap.RunicDrivesBootstrap
+description: A storage plugin focussing on mass storage of items
