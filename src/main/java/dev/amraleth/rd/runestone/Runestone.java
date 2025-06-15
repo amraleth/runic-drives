@@ -5,6 +5,8 @@ import com.google.gson.*;
 import dev.amraleth.rd.RunicDrives;
 import dev.amraleth.rd.string.Formatting;
 import lombok.Getter;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -212,7 +214,9 @@ public class Runestone {
                 ),
                 RunicDrives.MINI_MESSAGE.deserialize(
                         "<green>" + this.usedTypes + "<gray> / <green>" + MAX_TYPES + " types"
-                )
+                ),
+                Component.text(" "),
+                RunicDrives.MINI_MESSAGE.deserialize(getStatus(this.size, this.usedItems))
         ));
 
         this.runestoneItemStack.setItemMeta(itemMeta);
@@ -250,6 +254,10 @@ public class Runestone {
                 ),
                 RunicDrives.MINI_MESSAGE.deserialize(
                         "<green>" + runestoneItems.size() + "<gray> / <green>" + MAX_TYPES + " types"
+                ),
+                Component.text(" "),
+                RunicDrives.MINI_MESSAGE.deserialize(
+                        getStatus(size, getItemCountFromRunestoneItemMap(runestoneItems))
                 )
         ));
 
@@ -258,7 +266,17 @@ public class Runestone {
         return itemStack;
     }
 
-    public static int getItemCountFromRunestoneItemMap(@NotNull Map<ItemStack, Integer> runeStoneItems) {
+    private static @NotNull String getStatus(int size, int count) {
+        if (count <= 0) {
+            return "<green>Runestone is empty</green>";
+        } else if (count == size) {
+            return "<red>Runestone is full</red>";
+        } else {
+            return "<blue>Runestone is partially full</blue>";
+        }
+    }
+
+    private static int getItemCountFromRunestoneItemMap(@NotNull Map<ItemStack, Integer> runeStoneItems) {
         AtomicInteger count = new AtomicInteger();
         runeStoneItems.forEach((x, y) -> count.addAndGet(1));
         return count.get();
